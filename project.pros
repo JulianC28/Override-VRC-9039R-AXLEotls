@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "8-18 lift test 2",
+    "project_name": "11-11 lift controller",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,8 +635,9 @@
       }
     },
     "upload_options": {
-      "description": "Wattage testing for dt",
-      "icon": "planet"
+      "description": "lift control test",
+      "icon": "planet",
+      "slot": 1
     },
     "use_early_access": false
   }
