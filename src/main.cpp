@@ -96,12 +96,29 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 int liftLevelCounter = 0;
+bool liftMovementActivation = false;
+
 void liftOneButtonFunction() {
     if(controller.get_digital(DIGITAL_L2)){
         liftLevelCounter++;
+        liftMovementActivation = true;
     }
     else if(controller.get_digital(DIGITAL_R2)){
         liftLevelCounter--;
+        liftMovementActivation = true;
+    }
+}
+
+    int liftPosition = (leftLift.get_position() + rightLift.get_position())/2;
+    int liftPositionError = 0;
+
+void liftPositionControl(int desiredPosition) {
+    liftPosition = (leftLift.get_position() + rightLift.get_position())/2;
+    while (!((liftPosition > (desiredPosition - 25)) && (liftPosition < (desiredPosition + 25)))) {
+        liftPosition = (leftLift.get_position() + rightLift.get_position())/2;
+        liftPositionError = desiredPosition - liftPosition;
+        lift.move_absolute(liftPositionError, 80);
+        pros::Task::delay(5);
     }
 }
 
@@ -115,6 +132,7 @@ void initialize() {
 	chassis.calibrate(); // calibrate sensors
 	pros::lcd::initialize();
     pros::Task::create(liftOneButtonFunction, "liftOneButton");
+    pros::Task::create(liftPositionControl, "liftPositionControl");
 }
 
 /**
@@ -167,7 +185,8 @@ void opcontrol() {
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
     lift.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
-    lift.tare_position();
+    leftLift.tare_position();
+    rightLift.tare_position();
 
 	while (true) {
 		double rightDrivePower1 = rightDrive1.get_power(); // outputs the power from the first motor in the right motor group in watts
@@ -248,29 +267,24 @@ void opcontrol() {
             pros::Task::delay(250);
         }
         
-        if(liftLevelCounter == 0){
-            lift.move_absolute(0, 80);
-            while (!((lift.get_position() < -5) && (lift.get_position() > 5))) {
-                pros::delay(2);
-            }
+        liftPosition = (leftLift.get_position() + rightLift.get_position())/2;
+        liftPositionError = 0;
+
+        if(liftLevelCounter == 0 && liftMovementActivation == true){
+            liftPositionControl(0);
+            liftMovementActivation = false;
         }
-        else if(liftLevelCounter == 1){
-            lift.move_absolute(250, 80);
-            while (!((lift.get_position() < 245) && (lift.get_position() > 255))) {
-                pros::delay(2);
-            }
+        else if(liftLevelCounter == 1 && liftMovementActivation == true){
+            liftPositionControl(250);
+            liftMovementActivation = false;
         }
-        else if(liftLevelCounter == 2){
-            lift.move_absolute(500, 80);
-            while (!((lift.get_position() < 495) && (lift.get_position() > 505))) {
-                pros::delay(2);
-            }
+        else if(liftLevelCounter == 2 && liftMovementActivation == true){
+            liftPositionControl(500);
+            liftMovementActivation = false;
         }
-        else if(liftLevelCounter == 3){
-            lift.move_absolute(750, 80);
-            while (!((lift.get_position() < 745) && (lift.get_position() > 755))) {
-                pros::delay(2);
-            }
+        else if(liftLevelCounter == 3 && liftMovementActivation == true){
+            liftPositionControl(750);
+            liftMovementActivation = false;
         }
         
         
@@ -302,10 +316,10 @@ void opcontrol() {
             clawOpen.set_value(false);
         }
 
-        if(controller.get_digital(DIGITAL_L1)){
+        if(controller.get_digital(DIGITAL_UP)){
             clawTilt.set_value(true);
         }
-        else if(controller.get_digital(DIGITAL_L2)){
+        else if(controller.get_digital(DIGITAL_LEFT)){
             clawTilt.set_value(false);
         }
 		

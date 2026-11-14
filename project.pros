@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "11-11 lift controller",
+    "project_name": "11-14 lift control",
     "target": "v5",
     "templates": {
       "LemLib": {
