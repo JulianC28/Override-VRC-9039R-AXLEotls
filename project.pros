@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "11-14 lift control",
+    "project_name": "11-17 compp",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -635,8 +635,8 @@
       }
     },
     "upload_options": {
-      "description": "lift control test",
-      "icon": "planet",
+      "description": "comp",
+      "icon": "X",
       "slot": 1
     },
     "use_early_access": false
