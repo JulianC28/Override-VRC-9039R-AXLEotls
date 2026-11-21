@@ -22,14 +22,14 @@ pros::MotorGroup lift({7, -8}, pros::MotorGearset::red);
 pros::Motor intake(9);
 */
 
-pros::Motor rightDrive1(-1);
-pros::Motor rightDrive2(-2);
-pros::Motor leftDrive1(3);
-pros::Motor leftDrive2(4);
+pros::Motor leftDrive1(-1);
+pros::Motor leftDrive2(-2);
+pros::Motor rightDrive1(3);
+pros::Motor rightDrive2(4);
 
 
-pros::MotorGroup rightDrive({1, 2});
-pros::MotorGroup leftDrive({-3, -4});
+pros::MotorGroup leftDrive({-1, -2});
+pros::MotorGroup rightDrive({3, 4});
 
 pros::Motor leftLift(5);
 pros::Motor rightLift(-6);
@@ -175,6 +175,10 @@ void autonomous() {
     pros::delay(800);
     rightDrive.move(0);
     leftDrive.move(0);
+    pros::delay(500);
+    rightDrive.move(-40);
+    leftDrive.move(40);
+    pros::delay(500);
 }
 
 /**
@@ -253,11 +257,11 @@ void opcontrol() {
         
         pros::screen::set_pen(RGB2COLOR(red, green, 20));
         pros::screen::print(pros::E_TEXT_SMALL, 1, "Data n' Stuff:");
-        pros::screen::print(pros::E_TEXT_SMALL, 2, "Right Drive Motor 1 (Port 1) Power: %dmW", rightDrivePower1Conversion);
-        pros::screen::print(pros::E_TEXT_SMALL, 3, "Right Drive Motor 2 (Port 2) Power: %dmW", rightDrivePower2Conversion); 
+        pros::screen::print(pros::E_TEXT_SMALL, 2, "Right Drive Motor 1 (Port 3) Power: %dmW", rightDrivePower1Conversion);
+        pros::screen::print(pros::E_TEXT_SMALL, 3, "Right Drive Motor 2 (Port 4) Power: %dmW", rightDrivePower2Conversion); 
         //pros::screen::print(pros::E_TEXT_SMALL, 4, "Right Drive Motor 3 (Port 3) Power: %dmW", rightDrivePower3Conversion);
-        pros::screen::print(pros::E_TEXT_SMALL, 5, "Left Drive Motor 1 (Port 3) Power: %dmW", leftDrivePower1Conversion);
-        pros::screen::print(pros::E_TEXT_SMALL, 6, "Left Drive Motor 2 (Port 4) Power: %dmW", leftDrivePower2Conversion);
+        pros::screen::print(pros::E_TEXT_SMALL, 5, "Left Drive Motor 1 (Port 1) Power: %dmW", leftDrivePower1Conversion);
+        pros::screen::print(pros::E_TEXT_SMALL, 6, "Left Drive Motor 2 (Port 2) Power: %dmW", leftDrivePower2Conversion);
         //pros::screen::print(pros::E_TEXT_SMALL, 7, "Left Drive Motor 3 (Port 6) Power: %dmW", leftDrivePower3Conversion);
         pros::screen::print(pros::E_TEXT_SMALL, 8, "Left Lift Motor (Port 5) Power: %dmW", leftLiftPowerConversion);
         pros::screen::print(pros::E_TEXT_SMALL, 9, "Right Lift Motor(Port 6) Power: %dmW", rightLiftPowerConversion);
@@ -265,9 +269,9 @@ void opcontrol() {
         pros::screen::print(pros::E_TEXT_SMALL, 11, "Lift Counter Mem: %d", liftLevelCounter);
         pros::screen::print(pros::E_TEXT_SMALL, 4, "Left Lift Position: %d", leftLiftPositionConversion);
 
-		int arcadeLeftY = controller.get_analog(ANALOG_LEFT_Y); // the left analog stick controls the left side of the drive train
-        int arcadeLeftX = controller.get_analog(ANALOG_RIGHT_Y); // the right analog stick controls the left side of the drive train        
-        chassis.tank(arcadeLeftY, arcadeLeftX); // creates an arcade drive scheme
+		int tankLeftY = controller.get_analog(ANALOG_LEFT_Y); // the left analog stick controls the left side of the drive train
+        int tankRightY = controller.get_analog(ANALOG_RIGHT_Y); // the right analog stick controls the left side of the drive train        
+        chassis.tank(tankLeftY, tankRightY); // creates an arcade drive scheme
 
         /*
         int liftLevelCounterMemory = liftLevelCounter;
